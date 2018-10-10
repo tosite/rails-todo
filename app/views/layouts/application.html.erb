@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <!-- Compiled and minified CSS -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <style>
+  body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  main {
+    flex: 1 0 auto;
+  }
+</style>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper teal">
+      <a href="/tasks" class="brand-logo" style="margin-left: 10px;">Ruby on Rails ToDo</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="https://twitter.com/mao_sum">Twitter</a></li>
+        <li><a href="http://tosite.work/">Blog</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container">
+    <%= yield %>
+  </main>
+  <footer class="page-footer grey darken-3" style="padding-top: 0;">
+    <p class="right-align" style="margin-right: 10px;">© 2018 @mao_sum</p>
+  </footer>
+  <script>
+    console.log('dom')
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+    var elems = document.querySelectorAll('.collapsible');
+    var instances = M.Collapsible.init(elems);
+    var elems = document.querySelectorAll('.datepicker');
+    <% flash.each do |key, val| %>
+    M.toast({html: '<%= val %>'})
+    <% end %>
+  </script>
+</body>
+</html>

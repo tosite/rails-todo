@@ -1,0 +1,132 @@
+<h1>Task list</h1>
+
+<p><small>Tasks#index - Find me in app/views/tasks/index.html.erb</small></p>
+
+<ul class="collapsible">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">add</i>Create New Task</div>
+    <div class="collapsible-body">
+
+      <form method="POST" action="/tasks">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+        <div class="input-field col s12">
+          <label for="task">Task Name</label>
+          <input id="task" name="task" type="text" class="validate" required>
+        </div>
+
+        <div class="input-field col s12">
+          <select name="state">
+            <% @status.each_with_index do |s,i| %>
+            <option value="<%= s %>"><%= s %></option>
+            <% end %>
+          </select>
+          <label>Task State</label>
+        </div>
+
+        <div class="input-field col s12">
+          <textarea id="free_comment" name="free_comment" class="materialize-textarea"></textarea>
+          <label for="free_comment">Comment</label>
+        </div>
+
+        <div class="input-field col s12">
+          <input type="text" name="limit_date" class="datepicker" required>
+          <label>Task Limit Day</label>
+        </div>
+        <p class="right-align"><button type="submit" class="btn">create</button></p>
+      </div>
+    </form>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th width="100px">State</th>
+      <th width="100px">Limit</th>
+      <th>Task</th>
+      <th width="50px"></th>
+      <th width="50px"></th>
+      <th width="50px"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @task.each do |t| %>
+    <tr>
+      <td>
+        <% if    t.state == 'todo' %>
+        <p class="btn btn-small  btn-block"><%= t.state %></p>
+        <% elsif t.state == 'doing' %>
+        <p class="btn btn-small  btn-block amber"><%= t.state %></p>
+        <% elsif t.state == 'done' %>
+        <p class="btn btn-small disabled btn-block grey"><%= t.state %></p>
+        <% else %>
+        <p class="btn btn-small disabled btn-block"><%= t.state %></p>
+        <% end %>
+      </td>
+      <td>
+        <%
+        today = Date.today
+        diff  = t.limit_date - today
+        %>
+        <% if    diff.to_i <=  0 %>
+        <b class="red-text text-lighten-2"><%= t.limit_date %></b>
+        <% elsif diff.to_i <= 3 %>
+        <b class="amber-text"><%= t.limit_date %></b>
+        <% else %>
+        <b><%= t.limit_date %></b>
+        <% end %>
+      </td>
+      <td>
+        <%= t.task %>
+        <% if t.free_comment.length > 0 %>
+        <a class="waves-effect waves-light btn btn-small btn-floating blue modal-trigger" href="#comment-<%= t.id %>"><i class="material-icons">search</i></a>
+        <% end %>
+      </td>
+      <td>
+        <% if t.state != 'done' %>
+        <form method="POST" action="/tasks/<%= t.id %>/done">
+          <input type="hidden" name="_method" value="PUT">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <button type="submit" class="btn green btn-floating btn-small"><i class="material-icons">check</i></button>
+        </form>
+        <% end %>
+      </td>
+      <td>
+        <a href="/tasks/<%= t.id %>" class="btn btn-floating btn-small"><i class="material-icons">edit</i></a>
+      </td>
+      <td>
+        <form method="POST" action="/tasks/<%= t.id %>">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <button type="submit" class="btn red btn-floating btn-small"><i class="material-icons">delete</i></button>
+        </form>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% @task.each do |t|  %>
+<% if t.free_comment.length == 0
+  next
+end
+%>
+<!-- Modal Structure -->
+<div id="comment-<%= t.id %>" class="modal">
+  <div class="modal-content">
+    <h4><%= t.task %></h4>
+    <p><%= t.free_comment %></p>
+  </div>
+</div>
+<% end %>
+
+<script>
+  var elems = document.querySelectorAll('.datepicker')
+  var min   = new Date()
+  var instances = M.Datepicker.init(elems, {
+    autoClose      : true,
+    format         : 'yyyy/m/d',
+    minDate        : min,
+  });
+</script>

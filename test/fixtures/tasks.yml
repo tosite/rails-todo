@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  state: 1
+  task: MyText
+  limit: 2018-10-06 11:57:14
+
+two:
+  state: 1
+  task: MyText
+  limit: 2018-10-06 11:57:14
