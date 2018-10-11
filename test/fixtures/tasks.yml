@@ -3,9 +3,11 @@
 one:
   state: 1
   task: MyText
-  limit: 2018-10-06 11:57:14
+  limit_date: 2018-10-06 11:57:14
+  free_comment: MyText
 
 two:
   state: 1
   task: MyText
-  limit: 2018-10-06 11:57:14
+  limit_date: 2018-10-06 11:57:14
+  free_comment: MyText
