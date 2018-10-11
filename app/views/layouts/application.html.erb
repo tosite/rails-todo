@@ -27,15 +27,32 @@
 <body>
   <nav>
     <div class="nav-wrapper teal">
-      <a href="/tasks" class="brand-logo" style="margin-left: 10px;">Ruby on Rails ToDo</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <% if is_login? %>
+      <a href="/tasks" class="brand-logo">ToDo</a>
+      <% else %>
+      <a href="/" class="brand-logo">ToDo</a>
+      <% end %>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
         <li><a href="https://twitter.com/mao_sum">Twitter</a></li>
-        <li><a href="http://tosite.work/">Blog</a></li>
+        <% if is_login? %>
+        <li><%= link_to "UserSetting", auth %></li>
+        <li><%= link_to "Logout", logout_path, method: :delete %></li>
+        <% else %>
+        <li><%= link_to "Signup", signup_path %></li>
+        <li><%= link_to "Login", login_path %></li>
+        <li><a href="mobile.html">Mobile</a></li>
+        <% end %>
       </ul>
     </div>
   </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+  </ul>
+
   <main class="container">
     <%= yield %>
+    <%= debug(params) if Rails.env.development? %>
   </main>
   <footer class="page-footer grey darken-3" style="padding-top: 0;">
     <p class="right-align" style="margin-right: 10px;">© 2018 @mao_sum</p>
@@ -49,6 +66,8 @@
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
     var elems = document.querySelectorAll('.datepicker');
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems);
     <% flash.each do |key, val| %>
     M.toast({html: '<%= val %>'})
     <% end %>

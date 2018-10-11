@@ -2,6 +2,12 @@
 
 <p><small>Tasks#index - Find me in app/views/tasks/index.html.erb</small></p>
 
+<% if is_login? %>
+<p>Login!</p>
+<% else %>
+<p>Not Login</p>
+<% end %>
+<%= @auth.email %>
 <ul class="collapsible">
   <li>
     <div class="collapsible-header"><i class="material-icons">add</i>Create New Task</div>

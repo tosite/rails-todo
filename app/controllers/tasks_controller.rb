@@ -2,7 +2,6 @@ class TasksController < ApplicationController
   def index
     @task   = Task.order('limit_date').all
     @status = ['todo', 'doing', 'done']
-    # puts @status
   end
 
   def show

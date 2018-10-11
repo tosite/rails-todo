@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
-  get '/' => redirect('/tasks')
+  # get 'sessions/new'
+
+  get       '/'       => 'users#index'
+  get       'signup'  => 'users#new'
+  get       '/login'  => 'sessions#new'
+  post      '/login'  => 'sessions#create'
+  delete    '/logout' => 'sessions#destroy'
+  resources :users, :only => [:index, :show, :new, :create, :update]
+
+
+  # get '/' => redirect('/users')
   get    'tasks'          => 'tasks#index'
   post   'tasks'          => 'tasks#store'
   put    'tasks/:id'      => 'tasks#update'
