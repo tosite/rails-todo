@@ -3,36 +3,32 @@
   Task Editing
 </h1>
 <!-- <small>Tasks#show - Find me in app/views/tasks/show.html.erb</small>  -->
+<%= form_for(@task, url: "/tasks/#{@task.id}", html: { method: 'PUT' }) do |f| %>
 
-<form method="POST" action="/tasks/<%= @task.id %>">
-  <input type="hidden" name="_method" value="PUT">
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-  <div class="row">
-    <div class="input-field col s12">
-      <label for="task">Task Name</label>
-      <input value="<%= @task.task %>" id="task" name="task" type="text" class="validate" required>
-    </div>
-    <div class="input-field col s12">
-      <select name="state">
-        <% @status.each_with_index do |s,i| %>
-        <option value="<%= s %>"><%= s %></option>
-        <% end %>
-      </select>
-      <label>Task State</label>
-    </div>
-    <div class="input-field col s12">
-      <textarea id="free_comment" name="free_comment" class="materialize-textarea"><%= @task.free_comment %></textarea>
-      <label for="free_comment">Comment</label>
-    </div>
-    <div class="input-field col s12">
-      <input type="text" name="limit_date" class="datepicker" required>
-      <label>Task Limit Day</label>
-    </div>
-  </div>
-  <p class="right-align">
-    <button type="submit" class="btn green">update</button>
-  </p>
-</form>
+<div class="input-field col s6">
+  <%= f.text_field :task, :required => true %>
+  <%= f.label :task %>
+</div>
+
+<div class="input-field col s6">
+  <%= f.select(:state, [['todo', 'todo'], ['doing', 'doing'], ['done', 'done']]) %>
+  <%= f.label :state %>
+</div>
+
+<div class="input-field col s6">
+  <%= f.text_field :free_comment %>
+  <%= f.label :free_comment %>
+</div>
+
+<div class="input-field col s6">
+ <%= f.text_field :limit_date, class: "datepicker", :required => true %>
+ <%= f.label :limit_date %>
+</div>
+
+<%= f.submit "edit task", class: "btn" %>
+
+<% end %>
+
 <script>
   console.log('load')
   var elems = document.querySelectorAll('.datepicker')

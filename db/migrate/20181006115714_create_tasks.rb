@@ -5,6 +5,7 @@ class CreateTasks < ActiveRecord::Migration[5.2]
       t.text     :task
       t.date     :limit_date
       t.text     :free_comment
+      t.integer  :user_id
 
       t.timestamps
     end

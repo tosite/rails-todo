@@ -1,50 +1,55 @@
-<h1>Task list</h1>
+<h1><%= @auth.name %>'s Task List</h1>
 
-<p><small>Tasks#index - Find me in app/views/tasks/index.html.erb</small></p>
+<!-- <p><small>Tasks#index - Find me in app/views/tasks/index.html.erb</small></p> -->
 
-<% if is_login? %>
-<p>Login!</p>
-<% else %>
-<p>Not Login</p>
+<% if @task.errors.any? %>
+<div class="card red lighten-3">
+  <div class="card-content white-text">
+    <span class="card-title red-text text-darken-3">
+      <b><%= @task.errors.count %>個の項目に入力不備がありました。</b>
+    </span>
+    <ul>
+      <% @task.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
 <% end %>
-<%= @auth.email %>
+
 <ul class="collapsible">
   <li>
     <div class="collapsible-header"><i class="material-icons">add</i>Create New Task</div>
     <div class="collapsible-body">
-
-      <form method="POST" action="/tasks">
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-
-        <div class="input-field col s12">
-          <label for="task">Task Name</label>
-          <input id="task" name="task" type="text" class="validate" required>
-        </div>
-
-        <div class="input-field col s12">
-          <select name="state">
-            <% @status.each_with_index do |s,i| %>
-            <option value="<%= s %>"><%= s %></option>
-            <% end %>
-          </select>
-          <label>Task State</label>
-        </div>
-
-        <div class="input-field col s12">
-          <textarea id="free_comment" name="free_comment" class="materialize-textarea"></textarea>
-          <label for="free_comment">Comment</label>
-        </div>
-
-        <div class="input-field col s12">
-          <input type="text" name="limit_date" class="datepicker" required>
-          <label>Task Limit Day</label>
-        </div>
-        <p class="right-align"><button type="submit" class="btn">create</button></p>
+      <%= form_for(@task) do |f| %>
+      <div class="input-field col s6">
+        <%= f.text_field :task, :required => true %>
+        <%= f.label :task %>
       </div>
-    </form>
-  </li>
+
+      <div class="input-field col s6">
+        <%= f.select(:state, [['todo', 'todo'], ['doing', 'doing'], ['done', 'done']]) %>
+        <%= f.label :state %>
+      </div>
+
+      <div class="input-field col s6">
+        <%= f.text_field :free_comment %>
+        <%= f.label :free_comment %>
+      </div>
+
+      <div class="input-field col s6">
+       <%= f.text_field :limit_date, class: "datepicker", :required => true %>
+       <%= f.label :limit_date %>
+     </div>
+
+     <%= f.submit "Create New task", class: "btn" %>
+
+     <% end %>
+   </div>
+ </li>
 </ul>
 
+<% if !@auth.tasks.nil? %>
 <table>
   <thead>
     <tr>
@@ -57,8 +62,8 @@
     </tr>
   </thead>
   <tbody>
-    <% @task.each do |t| %>
-    <tr>
+    <% @auth.tasks.each do |t| %>
+    <tr id="task-<%= t.id %>">
       <td>
         <% if    t.state == 'todo' %>
         <p class="btn btn-small  btn-block"><%= t.state %></p>
@@ -75,7 +80,7 @@
         today = Date.today
         diff  = t.limit_date - today
         %>
-        <% if    diff.to_i <=  0 %>
+        <% if    diff.to_i <= 0 %>
         <b class="red-text text-lighten-2"><%= t.limit_date %></b>
         <% elsif diff.to_i <= 3 %>
         <b class="amber-text"><%= t.limit_date %></b>
@@ -91,29 +96,30 @@
       </td>
       <td>
         <% if t.state != 'done' %>
-        <form method="POST" action="/tasks/<%= t.id %>/done">
-          <input type="hidden" name="_method" value="PUT">
-          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-          <button type="submit" class="btn green btn-floating btn-small"><i class="material-icons">check</i></button>
-        </form>
+        <%= form_for(t, url: "/tasks/#{t.id}", html: { method: 'PUT' }) do |f| %>
+        <input type="hidden" name="task[state]" value="done">
+        <button type="submit" class="btn green btn-floating btn-small">
+          <i class="material-icons">check</i>
+        </button>
+        <% end %>
         <% end %>
       </td>
       <td>
-        <a href="/tasks/<%= t.id %>" class="btn btn-floating btn-small"><i class="material-icons">edit</i></a>
+        <%= link_to("/tasks/#{t.id}", class: "btn btn-floating btn-small") do %>
+        <i class="material-icons">edit</i>
+        <% end%>
       </td>
       <td>
-        <form method="POST" action="/tasks/<%= t.id %>">
-          <input type="hidden" name="_method" value="DELETE">
-          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-          <button type="submit" class="btn red btn-floating btn-small"><i class="material-icons">delete</i></button>
-        </form>
+        <%= link_to("/tasks/#{t.id}", class: "btn red btn-floating btn-small", method: "DELETE") do %>
+        <i class="material-icons">delete</i>
+        <% end%>
       </td>
     </tr>
     <% end %>
   </tbody>
 </table>
 
-<% @task.each do |t|  %>
+<% @auth.tasks.each do |t|  %>
 <% if t.free_comment.length == 0
   next
 end
@@ -126,6 +132,7 @@ end
   </div>
 </div>
 <% end %>
+<% end # !@auth.tasks.nil? %>
 
 <script>
   var elems = document.querySelectorAll('.datepicker')
