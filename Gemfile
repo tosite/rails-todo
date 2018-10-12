@@ -8,7 +8,9 @@ gem 'rails', '~> 5.2.1'
 gem 'bcrypt', '3.1.12'
 gem 'rails-controller-testing'
 # Use mysql as the database for Active Record
-gem 'mysql2', '>= 0.4.4', '< 0.6.0'
+gem 'mysql2', '>= 0.4.4', '< 0.6.0', group: [:development, :test]
+gem 'pg', group: :production
+
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -59,6 +61,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem 'mysql2', group: [:development, :test]
-gem 'pg', group: :production
