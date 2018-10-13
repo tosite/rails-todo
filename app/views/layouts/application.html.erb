@@ -34,20 +34,27 @@
       <% end %>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="https://twitter.com/mao_sum">Twitter</a></li>
+        <li><a href="https://twitter.com/mao_sum" target="_blank">Twitter</a></li>
         <% if is_login? %>
-        <li><%= link_to "UserSetting", auth %></li>
+        <!-- <li><%= link_to "UserSetting", auth %></li> -->
         <li><%= link_to "Logout", logout_path, method: :delete %></li>
         <% else %>
         <li><%= link_to "Signup", signup_path %></li>
         <li><%= link_to "Login", login_path %></li>
-        <li><a href="mobile.html">Mobile</a></li>
         <% end %>
       </ul>
     </div>
   </nav>
 
   <ul class="sidenav" id="mobile-demo">
+    <li><a href="https://twitter.com/mao_sum" target="_blank">Twitter</a></li>
+    <% if is_login? %>
+    <!-- <li><%= link_to "UserSetting", auth %></li> -->
+    <li><%= link_to "Logout", logout_path, method: :delete %></li>
+    <% else %>
+    <li><%= link_to "Signup", signup_path %></li>
+    <li><%= link_to "Login", login_path %></li>
+    <% end %>
   </ul>
 
   <main class="container">
